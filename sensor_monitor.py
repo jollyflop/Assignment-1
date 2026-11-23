@@ -34,13 +34,16 @@ def generate_readings(count, min_value, max_value, seed=42):
 def calculate_statistics(readings, threshold):
     values = np.array(readings)
 
+    mask = values > threshold
+    high_readings = values[mask]
+
     stats = {
         "count": len(values),
         "mean": np.mean(values),
         "min": np.min(values),
         "max": np.max(values),
         "std": np.std(values),
-        "above": int(np.sum(values > threshold)),
+        "above": len(high_readings),
     }
 
     return stats
@@ -71,8 +74,16 @@ def display_results(stats, outliers):
 
 
 def save_readings(filename, readings):
-    pass
+    try:
+        with open(filename, "w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["sample", "reading"])
 
+            for sample_number, reading in enumerate(readings, start=1):
+                writer.writerow([sample_number, reading])
+
+    except OSError as error:
+        print("Could not access the file:", error)
 
 def load_readings(filename):
     pass
@@ -87,10 +98,9 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    readings = [10, 20, 30]
-    stats = calculate_statistics(readings, 15)
-    outliers = find_outliers(readings, 15)
-    display_results(stats, outliers)
+    readings = generate_readings(5, 15, 35)
+    save_readings("readings.csv", readings)
+    save_readings("no_such_folder/data.csv", readings)
 
 if __name__ == "__main__":
     main()

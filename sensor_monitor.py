@@ -17,8 +17,18 @@ def get_user_input():
     pass
 
 
+
 def generate_readings(count, min_value, max_value, seed=42):
-    pass
+    random.seed(seed)
+
+    readings = []
+
+    for _ in range(count):
+        value = round(random.uniform(min_value, max_value), 2)
+        readings.append(value)
+
+    return readings
+
 
 
 def calculate_statistics(readings, threshold):
@@ -50,7 +60,8 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    print("Program started")
+    readings = generate_readings(10, 15, 35)
+    print(readings)
 
 
 if __name__ == "__main__":

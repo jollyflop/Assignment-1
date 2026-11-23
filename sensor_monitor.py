@@ -32,15 +32,42 @@ def generate_readings(count, min_value, max_value, seed=42):
 
 
 def calculate_statistics(readings, threshold):
-    pass
+    values = np.array(readings)
+
+    stats = {
+        "count": len(values),
+        "mean": np.mean(values),
+        "min": np.min(values),
+        "max": np.max(values),
+        "std": np.std(values),
+        "above": int(np.sum(values > threshold)),
+    }
+
+    return stats
 
 
 def find_outliers(readings, threshold):
-    pass
+    outliers = []
+
+    for number, value in enumerate(readings, start=1):
+        if value > threshold:
+            outliers.append((number, value))
+
+    return outliers
 
 
 def display_results(stats, outliers):
-    pass
+    print("\n--- Results ---")
+    print(f"Count: {stats['count']}")
+    print(f"Mean: {stats['mean']:.2f}")
+    print(f"Min: {stats['min']:.2f}")
+    print(f"Max: {stats['max']:.2f}")
+    print(f"Std: {stats['std']:.2f}")
+    print(f"Above threshold: {stats['above']}")
+    print("Readings above threshold:")
+
+    for number, value in outliers:
+        print(f"Sample {number}: {value}")
 
 
 def save_readings(filename, readings):
@@ -60,9 +87,10 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    readings = generate_readings(10, 15, 35)
-    print(readings)
-
+    readings = [10, 20, 30]
+    stats = calculate_statistics(readings, 15)
+    outliers = find_outliers(readings, 15)
+    display_results(stats, outliers)
 
 if __name__ == "__main__":
     main()

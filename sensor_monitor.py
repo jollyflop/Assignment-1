@@ -86,7 +86,20 @@ def save_readings(filename, readings):
         print("Could not access the file:", error)
 
 def load_readings(filename):
-    pass
+    readings = []
+
+    try:
+        with open(filename, "r", newline="", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                readings.append(float(row["reading"]))
+
+    except (OSError, ValueError, KeyError) as error:
+        print("Could not load the CSV:", error)
+        return []
+
+    return readings
 
 
 def plot_readings(readings, threshold, sensor_type):
@@ -107,7 +120,7 @@ def plot_readings(readings, threshold, sensor_type):
     )
 
     plt.xlabel("Sample number")
-    plt.ylabel("Angle (°)")
+    plt.ylabel("Value")
     plt.title(f"{sensor_type} Readings and Threshold")
     plt.legend()
     plt.grid(True)
@@ -126,9 +139,8 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    readings = generate_readings(50, 15, 35)
-    plot_readings(readings, 30, "Temperature")
-    plot_histogram(readings, "Temperature")
+    print(load_readings("readings.csv"))
+    print(load_readings("no_file.csv"))
 
 if __name__ == "__main__":
     main()

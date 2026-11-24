@@ -6,15 +6,43 @@ import numpy as np
 
 
 def get_float(prompt):
-    pass
+    while True:
+        try:
+            value = float(input(prompt))
+            return value
+        except ValueError:
+            print("Invalid input: please enter a number.")
 
 
 def get_positive_int(prompt):
-    pass
+    while True:
+        try:
+            value = int(input(prompt))
+
+            if value > 0:
+                return value
+
+            print("Invalid input: the number must be greater than zero.")
+        except ValueError:
+            print("Invalid input: please enter a whole number.")
 
 
 def get_user_input():
-    pass
+    sensor_type = input("Sensor type: ")
+    count = get_positive_int("Number of readings: ")
+
+    while True:
+        min_value = get_float("Minimum value: ")
+        max_value = get_float("Maximum value: ")
+
+        if min_value < max_value:
+            break
+
+        print("Invalid input: minimum must be less than maximum.")
+
+    threshold = get_float("Alert threshold: ")
+
+    return sensor_type, count, min_value, max_value, threshold
 
 
 
@@ -139,8 +167,7 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    print(load_readings("readings.csv"))
-    print(load_readings("no_file.csv"))
+    print(get_user_input())
 
 if __name__ == "__main__":
     main()

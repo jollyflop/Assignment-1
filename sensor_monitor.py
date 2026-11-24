@@ -46,7 +46,7 @@ def get_user_input():
 
 
 
-def generate_readings(count, min_value, max_value, seed=42):
+def generate_readings(count, min_value, max_value, seed=54):
     random.seed(seed)
 
     readings = []
@@ -167,7 +167,38 @@ def plot_histogram(readings, sensor_type):
 
 
 def main():
-    print(get_user_input())
+    print("1 - Generate new readings")
+    print("2 - Load readings from a CSV file")
+
+    while True:
+        choice = input("Choose 1 or 2: ")
+
+        if choice == "1" or choice == "2":
+            break
+
+        print("Invalid choice: please enter 1 or 2.")
+
+    if choice == "1":
+        sensor_type, count, min_value, max_value, threshold = get_user_input()
+        readings = generate_readings(count, min_value, max_value)
+        save_readings("readings.csv", readings)
+    else:
+        filename = input("CSV file name: ")
+        readings = load_readings(filename)
+
+        if len(readings) == 0:
+            print("There are no readings to analyze.")
+            return
+
+        sensor_type = input("Sensor type: ")
+        threshold = get_float("Alert threshold: ")
+
+    stats = calculate_statistics(readings, threshold)
+    outliers = find_outliers(readings, threshold)
+    display_results(stats, outliers)
+
+    plot_readings(readings, threshold, sensor_type)
+    plot_histogram(readings, sensor_type)
 
 if __name__ == "__main__":
     main()

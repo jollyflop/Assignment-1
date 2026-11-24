@@ -90,17 +90,45 @@ def load_readings(filename):
 
 
 def plot_readings(readings, threshold, sensor_type):
-    pass
+    plt.figure()
+    sample_number = np.arange(len(readings)) + 1
+
+    plt.plot(
+        sample_number,
+        readings,
+        marker="o",
+        label="Reading"
+    )
+
+    plt.axhline(
+        threshold,
+        linestyle="--",
+        label="Threshold"
+    )
+
+    plt.xlabel("Sample number")
+    plt.ylabel("Angle (°)")
+    plt.title(f"{sensor_type} Readings and Threshold")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 
 def plot_histogram(readings, sensor_type):
-    pass
+    plt.figure()
+    plt.hist(readings, bins=5, edgecolor="black")
+
+    plt.xlabel("Value")
+    plt.ylabel("Frequency")
+    plt.title(f"Distribution of {sensor_type} Readings")
+    plt.grid(axis="y")
+    plt.show()
 
 
 def main():
-    readings = generate_readings(5, 15, 35)
-    save_readings("readings.csv", readings)
-    save_readings("no_such_folder/data.csv", readings)
+    readings = generate_readings(50, 15, 35)
+    plot_readings(readings, 30, "Temperature")
+    plot_histogram(readings, "Temperature")
 
 if __name__ == "__main__":
     main()
